@@ -1,3 +1,4 @@
+#include "socket.h"         /* G_DEBUG_ADDR_INFO */
 #include "request.h"
 #include "dict.h"
 #include "stringx.h"
@@ -10,7 +11,7 @@
 
 #define VERSION "myurl/0.1.0\n"
 
-static void voidusage(void);
+static void usage(void);
 static Dict *headers_to_dict(char *str);
 static Dict *form_to_dict(char *str);
 static void display_request(Response *resp);
@@ -29,9 +30,9 @@ usage(void)
 "-I, --head          Show document info only\n"
 "-d, --data DATA     HTTP POST data. example: id=1\n"
 "-H, --header LINE   Pass custom header LINE to server\n"
-"-L, --location      Follow redirects\n"
+// "-L, --location      Follow redirects\n"
 "-X, --request COMMAND  Specify request command to use\n"
-"-o, --output FILE   Write to FILE instead of stdout\n"
+// "-o, --output FILE   Write to FILE instead of stdout\n"
 "-v, --verbose       Make the operation more talkative\n"
 "-V, --version       Show version number and quit\n"
 "\n"
@@ -63,8 +64,8 @@ headers_to_dict(char *str)
 /**
  * form 表单字符串转换为字典
  * 例：
- * input: "a=ff, b=2, c=fg"
- * output: {"a": "ff", "b": "2", "c": "fg"}
+ * input: "a=ff"
+ * output: {"a": "ff"}
  **/
 static Dict *
 form_to_dict(char *str)
@@ -138,7 +139,7 @@ main(int argc, char *argv[])
         {"head", no_argument, NULL, 'I'},
         {"data", required_argument, NULL, 'd'}, 
         {"header", required_argument, NULL, 'H'},
-        {"location", required_argument, NULL, 'L'},
+        {"location", no_argument, NULL, 'L'},
         {"request", required_argument, NULL, 'X'},
         {"outfile", required_argument, NULL, 'o'},
         {"verbose", no_argument, NULL, 'v'},
@@ -167,14 +168,14 @@ main(int argc, char *argv[])
             dict_update(headers, headers_to_dict(optarg));
             break;
         case 'L':
-            fprintf(stdout, "Location\n");
-            break;
+            fprintf(stdout, "Unsupported redirects\n");
+            return -1;
         case 'X':
             method = optarg;
             break;
         case 'o':
-            fprintf(stdout, "download\n");
-            break;
+            fprintf(stdout, "Unsupported download\n");
+            return -1;
         case 'v':
             debug = 'Y';
             break;
@@ -187,9 +188,13 @@ main(int argc, char *argv[])
     if (argc < 2) {
         fprintf(stdout, "try 'myurl --help'\n");
         return 0;
+    } else if ((argv[optind]) == NULL) {
+        fprintf(stderr, "no URL specified!\n");
+        return -1;
     }
 
-    url = argv[argc - 1];
+    url = argv[optind];
+
     if (strcmp(method, "GET") == 0)
         resp = http_get(url, headers);
     else if (strcmp(method, "HEAD") == 0)
@@ -201,8 +206,10 @@ main(int argc, char *argv[])
     else
         resp = http_request(url, method, headers, data);
     
-    if (debug == 'Y')
+    if (debug == 'Y') {
+        printf("%s", G_DEBUG_ADDR_INFO);
         display_request(resp);
+    }
     
     display_response(resp, debug);
     http_free_response(resp);

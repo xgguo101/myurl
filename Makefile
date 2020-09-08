@@ -1,5 +1,5 @@
-
 CC = gcc
+STD = -std=c99
 
 DIR_SRC = ./src
 DIR_OBJ = ./build/obj
@@ -21,8 +21,12 @@ ${BIN_TARGET}:${OBJ}
 
 ${DIR_OBJ}/%.o:${DIR_SRC}/%.c
 	@mkdir -p $(@D)
-	$(CC) -c $< -o $@
+	$(CC) -c $(STD) $< -o $@
 
 .PHONY:clean
 clean:
-	find ${DIR_OBJ} -name *.o -exec rm -rf {}
+	find ${DIR_OBJ} -name *.o |xargs rm -f
+
+.PHONY : install
+install:
+	cp $(BIN_TARGET) $(TARGET)

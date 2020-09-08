@@ -96,7 +96,8 @@ recv_all_data_from_socket(int sockfd)
 }
 
 
-/** 解析 HTTP Response 
+/**
+ * 解析 HTTP Response 
  * 返回指向 Response 结构体的指针
  */
 static Response *

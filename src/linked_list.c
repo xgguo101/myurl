@@ -26,6 +26,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
+#include <string.h>
 
 #define LL Linked_list *
 
@@ -119,7 +120,7 @@ linked_list_find(LL linked_list, char *key)
     LL p = linked_list;
     int index = 0;
     for (; p->next != NULL; p = p->next) {
-        if (p->key == key) {
+        if (strcmp(p->key, key) == 0) {
             return p->value;
         }
         index++;
@@ -135,7 +136,7 @@ linked_list_get_index(LL linked_list, char *key)
     LL p = linked_list;
     int index = 0;
     for (; p->next != NULL; p = p->next) {
-        if (p->key == key) {
+        if (strcmp(p->key, key) == 0) {
             return index;
         }
         index++;

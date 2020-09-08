@@ -86,8 +86,9 @@ dict_set(Dict *d, char *key, char *value)
     if (d->array[index] != NULL) {      /* 表示此槽位已经被占 */
         Linked_list *lst = d->array[index];
         char *rv_value = linked_list_find(lst, key);
-        if (rv_value != NULL)       /* 表示此 key 已经存在, 更新该值 */
+        if (rv_value != NULL) {       /* 表示此 key 已经存在, 更新该值 */
             d->array[index] = linked_list_set(lst, key, value);
+        }
         else {
             d->array[index] = linked_list_appendleft(lst, key, value);
             d->length += 1;

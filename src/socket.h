@@ -3,6 +3,9 @@
 
 #include <sys/types.h>  /* ssize_t */
 
+/* 建立连接的 IP 与 PORT 信息*/
+extern char G_DEBUG_ADDR_INFO[1024];
+
 /* 返回已建立好连接的 sockfd */
 int socket_connect(const char *host, int port);
 
