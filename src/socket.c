@@ -31,7 +31,7 @@ socket_connect(const char *host, int port)
             fprintf(stderr, "Could not resolve host: %s\n", host);
             exit(-1);
         }
-        memcpy(&server_addr.sin_addr, hp->h_addr, hp->h_length);
+        memcpy(&server_addr.sin_addr, hp->h_addr_list[0], hp->h_length);
     }
     server_addr.sin_family = AF_INET;
     server_addr.sin_port = htons(port);
